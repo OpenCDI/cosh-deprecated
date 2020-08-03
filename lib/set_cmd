@@ -1,3 +1,15 @@
-#!/bin/sh
-  set_cmd(){ sanitize "$*"; test $# -eq 0 || cmd_arg=$@; }
+execute_in_container_cmd(){
+  docker exec \
+    -u $(getvar cosh_user) \
+    -i${cmd_arg:-t} `get_target_container` \
+    ${cmd_arg:-/bin/sh}
+}
+set_cmd(){ 
+  sanitize "$*"
+  test $# -eq 0 && return 1
+
+  cmd_arg=$@; 
+  readonly cmd_arg
+  execute_in_container(){ execute_in_container_shebang; }
+}
 
