@@ -11,8 +11,9 @@ cosh(){
 
     app_prepend=coshapp
 
-    default_image_ver=10.4-slim
-    default_image_base=debian-fresh
+    default_image_ver=10.5
+    default_image_base=debian
+    #default_image_base=debian-l10n-ja
     default_app_name=firefox
     default_app_image=${app_prepend:?app_prepend not set!}/${default_app_name}:${default_image_base:?image base not set}-${default_image_ver:?image version not set}
   }
@@ -28,24 +29,35 @@ cosh(){
     ##specify target user
       shift; set_user $@; shiftstack 1 $@
       ;;
-    -l|--list) ##BREAK_OPT
-    ##list container
-      list_container; exit ;;
     -o|--onetime)
     ##make temporary container to execute commands
       shift;
       launch_temporary_container $@
       remove_temporary_container; exit;;
-    -h|--help) #[--all] ##BREAK_OPT
-    ##show this help
-      showhelp ${2:---short}; exit ;;
     -*) showhelp $0; throw unknown option $1 ;;
     *) return 1 ;;
     esac
   }
   #SHELIB_OPTIONS
 
-  parseargs(){ set_file $1 || set_cmd $@ || set_shell;}
+
+  #SHELIB_SUBCOMMANDS
+  parseargs(){ 
+    case $1 in
+    list) 
+    ##list container
+      list_container; exit ;;
+    images) 
+    ##list container images
+      list_images; exit ;;
+    help) #[--all] 
+    ##show this help
+      showhelp ${2:---short}; exit ;;
+    *) set_file $1 || set_cmd $@ || set_shell;;
+    esac
+
+  }
+  #SHELIB_SUBCOMMANDS
 
   execute(){
     chk_active_container

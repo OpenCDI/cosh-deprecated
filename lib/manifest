@@ -2,8 +2,8 @@
 # cosh
 
 SHELIB_MODULE_NAME=cosh
-SHELIB_MODULE_VERSION=0.0.1
-SHELIB_MODULE_DESC="generic container wrapper script (transitional)"
+SHELIB_MODULE_VERSION=0.0.9
+SHELIB_MODULE_DESC="container shell toolkit for /bin/sh"
 MODULE_AUTHER_NAME="Okadarien Saru"
 MODULE_AUTHER_EMAIL="okadas@dev.sysnk.net"
-MODULE_REPO_BASE="https://github.com/okadash/cosh-transition"
+MODULE_REPO_BASE="https://github.com/okadash/cosh"
