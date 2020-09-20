@@ -1,7 +1,7 @@
 execute_in_container_cmd(){
   docker exec \
     -u $(getvar cosh_user) \
-    -i${cmd_arg:-t} `get_target_container` \
+    -i ${cmd_arg:+-t} `get_target_container` \
     ${cmd_arg:-/bin/sh}
 }
 set_cmd(){ 
@@ -10,6 +10,6 @@ set_cmd(){
 
   cmd_arg=$@; 
   readonly cmd_arg
-  execute_in_container(){ execute_in_container_shebang; }
+  execute_in_container(){ execute_in_container_cmd; }
 }
 

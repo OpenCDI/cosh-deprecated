@@ -1,0 +1,10 @@
+#!/bin/sh
+# list container images
+
+list_images(){
+  list_image_name_full(){ docker images | grep -E "^${app_prepend:?stackname not defined}/.*$1.*"; }
+  list_image_name_short(){ list_image_name_full $1 | awk '{print $1 ":" $2}'; }
+
+  case "$1" in --full|-f) list_image_name_full $2;; *) list_image_name_short $@ ;; esac
+}
+
