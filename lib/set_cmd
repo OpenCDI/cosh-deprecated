@@ -1,5 +1,6 @@
+#!/bin/sh
 execute_in_container_cmd(){
-  docker exec \
+  ${SUDOING:+sudo} docker exec \
     -u $(getvar cosh_user) \
     -i ${cmd_arg:+-t} `get_target_container` \
     ${cmd_arg:-/bin/sh}

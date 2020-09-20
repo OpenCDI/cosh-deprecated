@@ -3,11 +3,11 @@
     case $1 in
     -i|--img) #image_name
       : ${2:?-i\|--image option needs an argument!};
-      app_image=`docker images | grep -E "^${login_name:-coshapp}/[[:alnum:]]*$2" | tr " "  : | sed -r -e s/:\+/:/g -e 's/^([^:]+:[^:]+).+/\1/g' | grep latest | head -1`
+      app_image=`${SUDOING:+sudo} docker images | grep -E "^${login_name:-coshapp}/[[:alnum:]]*$2" | tr " "  : | sed -r -e s/:\+/:/g -e 's/^([^:]+:[^:]+).+/\1/g' | grep latest | head -1`
       shift 2;
     esac
     setvar cosh_container cosh_`genseed 8`
-    docker run --name `getvar cosh_container` \
+    ${SUDOING:+sudo} docker run --name `getvar cosh_container` \
       -dt \
       --rm \
       -u `getvar cosh_user` \

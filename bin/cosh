@@ -3,6 +3,7 @@
 
 cosh(){
   loadenv(){
+    SUDOING=true
     MODULE_OPTION_DEFAULT_DESC="<command>"
     MODULE_SUBCOMMAND_DEFAULT_DESC=
     test -z ${cosh_container} && setvar cosh_container \. || setvar cosh_container $cosh_container
