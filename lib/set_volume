@@ -1,0 +1,4 @@
+#!/bin/sh
+set_volume(){
+  vol_args="$vol_args --mount type=volume,source=${1:?@cosh/set_volume: volume not specified!},destination=${2:?@cosh/set_volume: mountpoint not specified!}"
+}
