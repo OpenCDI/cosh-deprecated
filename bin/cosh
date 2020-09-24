@@ -3,7 +3,8 @@
 
 cosh(){
   loadenv(){
-    SUDOING=true
+    SUDOING=${SUDOING:+true}
+    test -z "$ONETIME" || unset ONETIME
     MODULE_OPTION_DEFAULT_DESC="<command>"
     MODULE_SUBCOMMAND_DEFAULT_DESC=
     test -z ${cosh_container} && setvar cosh_container \. || setvar cosh_container $cosh_container
@@ -13,8 +14,8 @@ cosh(){
     app_prepend=coshapp
 
     default_image_ver=10.5
-    default_image_base=debian
-    #default_image_base=debian-l10n-ja
+    #default_image_base=debian
+    default_image_base=debian-l10n-ja
     default_app_name=firefox
     default_app_image=${app_prepend:?app_prepend not set!}/${default_app_name}:${default_image_base:?image base not set}-${default_image_ver:?image version not set}
   }
@@ -24,17 +25,23 @@ cosh(){
     case $1 in 
     -c) #container
     ##specify target container
-      shift; set_container $@; shiftstack 1 $@
+      shift; set_container $1; shiftstack 1 $@
       ;;
     -u) #username
     ##specify target user
-      shift; set_user $@; shiftstack 1 $@
+      shift; set_user $1; shiftstack 1 $@
+      ;;
+    -v) #volume #mountpoint
+    ##specify docker volume to mount
+      shift; set_volume $1 $2; shiftstack 2 $@
       ;;
     -o|--onetime)
     ##make temporary container to execute commands
+      ONETIME=true
       shift;
       launch_temporary_container $@
-      remove_temporary_container; exit;;
+      shiftstack 1 $@
+      ;;
     -*) showhelp $0; throw unknown option $1 ;;
     *) return 1 ;;
     esac

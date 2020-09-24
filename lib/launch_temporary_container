@@ -3,10 +3,11 @@
     case $1 in
     -i|--img) #image_name
       : ${2:?-i\|--image option needs an argument!};
-      app_image=`${SUDOING:+sudo} docker images | grep -E "^${login_name:-coshapp}/[[:alnum:]]*$2" | tr " "  : | sed -r -e s/:\+/:/g -e 's/^([^:]+:[^:]+).+/\1/g' | grep latest | head -1`
+      app_name=${app_image:-`list_images | grep $2 | head -1`};
+      : ${app_name:=null}
       shift 2;
     esac
-    setvar cosh_container cosh_`genseed 8`
+    setvar cosh_container ${this:-null}_`genseed 8`
     ${SUDOING:+sudo} docker run --name `getvar cosh_container` \
       -dt \
       --rm \
@@ -18,10 +19,12 @@
       -e XMODIFIERS=$XMODIFIERS \
       -e GTK_IM_MODULE=$GTK_IM_MODULE \
       -e QT_IM_MODULE=$QT_IM_MODULE \
+      $vol_args \
       -v /dev/dri:/dev/dri \
       -v /dev/shm:/dev/shm \
       -v /tmp/.X11-unix:/tmp/.X11-unix \
       ${app_image:-$default_app_image} \
-      sh -c "while :; do sleep 100000; done"
-    set_cmd $@; execute;
+      $@
+    unset vol_args; 
+    exit
   }

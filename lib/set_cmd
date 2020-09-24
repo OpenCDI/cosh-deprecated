@@ -3,14 +3,16 @@ execute_in_container_cmd(){
   ${SUDOING:+sudo} docker exec \
     -u $(getvar cosh_user) \
     -i ${cmd_arg:+-t} `get_target_container` \
-    ${cmd_arg:-/bin/sh}
+    ${cmd_arg}
+  test -z "$ONETIME" || remove_temporary_container
 }
-set_cmd(){ 
+set_cmd(){ ##DI
   sanitize "$*"
   test $# -eq 0 && return 1
+  execute_in_container(){ execute_in_container_cmd ;}
 
   cmd_arg=$@; 
-  readonly cmd_arg
-  execute_in_container(){ execute_in_container_cmd; }
+  cmd_arg=${cmd_arg:-/bin/sh}
+  #readonly cmd_arg  #FIXME: exit with 1 in double invokation
 }
 
