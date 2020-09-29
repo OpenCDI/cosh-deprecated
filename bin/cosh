@@ -11,13 +11,14 @@ cosh(){
     test -z ${cosh_user} && setvar cosh_user duser || setvar cosh_user $cosh_user
     test -z ${cosh_home} && setvar cosh_home /home/duser || setvar cosh_home $cosh_home
 
-    app_prepend=coshapp
+    : ${COSH_APP_PREPEND:=coshapp}
 
-    default_image_ver=10.5
-    #default_image_base=debian
-    default_image_base=debian-l10n-ja
-    default_app_name=firefox
-    default_app_image=${app_prepend:?app_prepend not set!}/${default_app_name}:${default_image_base:?image base not set}-${default_image_ver:?image version not set}
+    COSH_DEFAULT_IMAGE_VAR=10.5
+    COSH_DEFAULT_IMAGE_TAG=debian-l10n-ja
+    COSH_DEFAULT_APP_NAME=firefox
+    COSH_DEFAULT_APP_IMAGE="${COSH_APP_PREPEND:?COSH_APP_PREPEND not set!}/${COSH_DEFAULT_APP_NAME}:${COSH_DEFAULT_IMAGE_TAG:?image base not set}-${COSH_DEFAULT_IMAGE_VAR:?image version not set}"
+
+    sanitize "$COSH_APP_PREPEND" "$COSH_DEFAULT_APP_IMAGE"
   }
 
   #SHELIB_OPTIONS
@@ -75,4 +76,5 @@ cosh(){
 
 }
 
-cook cosh $@
+if test ${0##*/} = cocosh; then cook cosh -c dom1 cosh $@;
+else cook cosh $@; fi
