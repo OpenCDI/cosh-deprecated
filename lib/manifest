@@ -2,7 +2,7 @@
 # cosh
 
 SHELIB_MODULE_NAME=cosh
-SHELIB_MODULE_VERSION=0.0.9
+SHELIB_MODULE_VERSION=0.1.0
 SHELIB_MODULE_DESC="container shell toolkit for /bin/sh"
 MODULE_AUTHER_NAME="Okadarien Saru"
 MODULE_AUTHER_EMAIL="okadas@dev.sysnk.net"

@@ -3,6 +3,7 @@
 
 cosh(){
   loadenv(){
+    #: ${DOCKER_HOST:?DOCKER_HOST not set!}
     SUDOING=${SUDOING:+true}
     test -z "$ONETIME" || unset ONETIME
     MODULE_OPTION_DEFAULT_DESC="<command>"
@@ -10,38 +11,40 @@ cosh(){
     test -z ${cosh_container} && setvar cosh_container \. || setvar cosh_container $cosh_container
     test -z ${cosh_user} && setvar cosh_user duser || setvar cosh_user $cosh_user
     test -z ${cosh_home} && setvar cosh_home /home/duser || setvar cosh_home $cosh_home
+    test -z ${cosh_network} && setvar cosh_network cdi_open || setvar cosh_home $cosh_home
 
-    : ${COSH_APP_PREPEND:=coshapp}
+    COSH_APP_PREPEND=${COSH_APP_PREPEND:-coshapp}
 
-    COSH_DEFAULT_IMAGE_VAR=10.5
+    COSH_DEFAULT_IMAGE_VER=10.7
     COSH_DEFAULT_IMAGE_TAG=debian-l10n-ja
     COSH_DEFAULT_APP_NAME=firefox
-    COSH_DEFAULT_APP_IMAGE="${COSH_APP_PREPEND:?COSH_APP_PREPEND not set!}/${COSH_DEFAULT_APP_NAME}:${COSH_DEFAULT_IMAGE_TAG:?image base not set}-${COSH_DEFAULT_IMAGE_VAR:?image version not set}"
+    COSH_DEFAULT_APP_IMAGE="${COSH_APP_PREPEND:?COSH_APP_PREPEND not set!}/${COSH_DEFAULT_APP_NAME}:${COSH_DEFAULT_IMAGE_TAG:?image base not set}-${COSH_DEFAULT_IMAGE_VER:?image version not set}"
 
     sanitize "$COSH_APP_PREPEND" "$COSH_DEFAULT_APP_IMAGE"
   }
 
   #SHELIB_OPTIONS
   parseopts(){
-    case $1 in 
+    case $1 in
     -c) #container
     ##specify target container
-      shift; set_container $1; shiftstack 1 $@
-      ;;
+      set_container $@;;
     -u) #username
     ##specify target user
-      shift; set_user $1; shiftstack 1 $@
-      ;;
-    -v) #volume #mountpoint
+      set_user $@;;
+    -f) #file
+    ##specify cosh script for the execution
+      set_file $2;;
+    -n|--network) #id
+    ##specify network bridge
+      set_network $1;;
+    -D|--data) #volume
     ##specify docker volume to mount
-      shift; set_volume $1 $2; shiftstack 2 $@
-      ;;
-    -o|--onetime)
+      set_volume $@ ;;
+    -o|--oneshot) #[cmd]
     ##make temporary container to execute commands
       ONETIME=true
-      shift;
       launch_temporary_container $@
-      shiftstack 1 $@
       ;;
     -*) showhelp $0; throw unknown option $1 ;;
     *) return 1 ;;
@@ -51,18 +54,21 @@ cosh(){
 
 
   #SHELIB_SUBCOMMANDS
-  parseargs(){ 
+  parseargs(){
     case $1 in
-    list) 
+    list) #[-l|-a]
     ##list container
       list_container $2; exit ;;
-    images) 
+    images) #[-f]
     ##list container images
       list_images; exit ;;
-    help) #[--all] 
+    copy) #[pod:]<path>
+    ##copy a file from/to container
+      cosh_copy $@ ;;
+    help) #[--all]
     ##show this help
       showhelp ${2:---short}; exit ;;
-    *) set_file $1 || set_cmd $@ || set_shell;;
+    *) set_stdin $@ || set_cmd $@ || set_shell;;
     esac
 
   }
@@ -76,5 +82,8 @@ cosh(){
 
 }
 
-if test ${0##*/} = cocosh; then cook cosh -c dom1 cosh $@;
-else cook cosh $@; fi
+case ${0##*/} in
+  cocosh) cook cosh -c dom1 cosh $@;;
+  cosh) cook cosh $@;;
+  *) : ;;
+esac

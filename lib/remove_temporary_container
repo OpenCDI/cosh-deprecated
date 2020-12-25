@@ -1,5 +1,5 @@
 #!/bin/sh
-  remove_temporary_container(){
-    silent getvar cosh_container || throw unknown container name 
-    ${SUDOING:+sudo} docker stop `getvar cosh_container`
-  }
+remove_temporary_container(){
+  silent getvar cosh_container || throw unknown container name
+  ${SUDOING:+sudo} docker stop `getvar cosh_container`
+}

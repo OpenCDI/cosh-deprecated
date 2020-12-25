@@ -1,18 +1,32 @@
 #!/bin/sh
-  launch_temporary_container(){
+launch_temporary_container(){
+  parseopts(){
     case $1 in
-    -i|--img) #image_name
+    -I|--img) #image_name
       : ${2:?-i\|--image option needs an argument!};
-      app_name=${app_image:-`list_images | grep $2 | head -1`};
-      test -z "${app_name}" && throw unknown container image with $2
-      shift 2;
+      cosh_app_image=${app_image:-`list_images | grep $2 | head -1`};
+      test -z "${cosh_app_image}" && throw unknown container image with $2;
+      shiftstack 2 $@;;
+    -*) throw "launch_temporary_container: unknown option $1";;
     esac
-    setvar cosh_container ${this:-null}_`genseed 8`
-    ${SUDOING:+sudo} docker run --name `getvar cosh_container` \
+
+  }
+
+  parseargs(){
+    setvar cmd "${*:-/bin/sh}";
+    test $# -ge 1 && shift $(expr $# - 1);
+    setvar cosh_container ${this:-null}_${1:-shell}_$(genseed 8)
+    setvar cosh_app_image "${cosh_app_image:-$COSH_DEFAULT_APP_IMAGE}" 
+    set_stdin $@ || return 0
+  }
+
+  execute(){
+
+    ${SUDOING:+sudo} docker run --name $(getvar cosh_container) \
       -dt \
       --rm \
-      -u `getvar cosh_user` \
-      --network `getvar cosh_network` \
+      -u $(getvar cosh_user) \
+      $(getvar network) \
       -e DISPLAY=:0 \
       -e LANGUAGE=$LANGUAGE \
       -e LANG=$LANG \
@@ -20,12 +34,14 @@
       -e XMODIFIERS=$XMODIFIERS \
       -e GTK_IM_MODULE=$GTK_IM_MODULE \
       -e QT_IM_MODULE=$QT_IM_MODULE \
-      $vol_args \
+      $(getvar volume) \
       -v /dev/dri:/dev/dri \
       -v /dev/shm:/dev/shm \
       -v /tmp/.X11-unix:/tmp/.X11-unix \
-      ${app_name:-$COSH_DEFAULT_APP_IMAGE} \
-      $@
+      $(getvar cosh_app_image) \
+      $(getvar cmd)
     unset vol_args; 
-    exit
   }
+
+  shiftstack 1 $@
+}

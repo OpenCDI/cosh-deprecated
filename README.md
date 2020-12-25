@@ -1,12 +1,12 @@
-COntainer SHell native toolkit for /bin/sh
+COntainer SHell toolkit for /bin/sh
 
 # ABOUT
 
-Container-oriented shell toolkit for pod operation and GUI sandboxing.
+COntainer SHell toolkit for pod operation and GUI sandboxing.
 
 # USAGE
 ```
-cosh-0.0.9  container shell toolkit for /bin/sh
+cosh-0.1.0  container shell toolkit for /bin/sh
 usage:
   cosh [-cuo] <command>
   cosh [list|images|help]

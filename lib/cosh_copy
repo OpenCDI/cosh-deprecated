@@ -1,0 +1,22 @@
+#!/bin/sh
+cosh_copy(){
+
+  require @cosh/copy
+
+  parseargs(){
+    test $# -eq 1 && cosh_copy_single $1
+    test $# -eq 2 && throw cosh_copy: argument number must be single or three
+    test $# -gt 3 && cosh_copy_standard $@
+  }
+
+  execute(){
+    docker cp ${recursive:+-r} \
+      ${cosh_source:?cosh_copy_file_exec: source not specified!} \
+      ${cosh_destination:?cosh_copy_file_exec: destination not specified!}
+  }
+
+  : ${1:?cosh_copy_file: argument must be specified!}
+  case $1 in -r) shift; recursive=1;; *);; esac
+
+  shiftstack 1 $@
+}

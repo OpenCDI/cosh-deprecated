@@ -1,15 +1,17 @@
-#!/bin/sh
 set_file(){
   sanitize "$*";
   test -f "$1" || return 1
-  setvar execute_lines $1
+  setvar exec_file $1
 
-  execute_in_container_shebang(){
+  parseargs(){ :; }
+
+  execute(){
       ${SUDOING:+sudo} docker exec \
         -u $(getvar cosh_user) \
-        -i `get_target_container` \
-        /bin/sh < `getvar execute_lines`
+	-i $(get_target_container) \
+	/bin/sh < $(getvar exec_file)
   }
 
-  execute_in_container(){ execute_in_container_shebang; }
+  shiftstack 1 $@
+
 }

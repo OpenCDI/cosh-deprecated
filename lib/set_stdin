@@ -1,0 +1,19 @@
+set_stdin(){
+  test -t 0 && return 1
+  parseargs(){
+    setvar cmd "${*:-/bin/sh}"
+  }
+  execute(){
+      test -z "$ONETIME" && setvar subcom exec
+      test ! -z "$ONETIME" && {
+        setvar subcom run
+      }
+      ${SUDOING:+sudo} docker \
+        $(getvar subcom) \
+        -u $(getvar cosh_user) \
+        -i $(get_target_container) \
+        $(getvar cosh_app_image) \
+        $(getvar cmd)
+  }
+  shiftstack 0 $@
+}

@@ -1,9 +1,9 @@
 #!/bin/sh
-
-chk_set_container(){ 
-  test -z "${1}" && throw "at least one argument needed for -c option, abort!"; 
+chk_set_container(){
+  test -z "${1}" && throw "at least one argument needed for -c option, abort!";
 }
 set_container(){
-  chk_set_container $1
-  setvar cosh_container $1;
+  chk_set_container $2;
+  setvar cosh_container $2;
+  shiftstack 2 $@
 }

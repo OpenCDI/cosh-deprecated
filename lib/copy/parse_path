@@ -1,0 +1,11 @@
+cosh_copy_fnparse(){
+  test $1 != ${1##*:} && obj_type=container_path || obj_type=path
+  test $1 != ${1#/} && full_path=/
+  swapper=${1##*:}
+  test ${swapper#/} != ${1##*:} && full_path=/
+}
+
+cosh_copy_get_container_path(){
+  echo "${full_path:-${PWD}/}${1##*:}"
+}
+

@@ -1,0 +1,12 @@
+cosh_copy_single(){ #copy with single argument
+  cosh_copy_fnparse $1
+  case "$obj_type" in
+    container_path) 
+      cosh_source=${1%%:*}:$(cosh_copy_get_container_path $1); 
+      cosh_destination=${1##*:} ;;
+    path) 
+      cosh_source=$1
+      cosh_destination=$(list_container | head -1):$(cosh_copy_get_container_path $1) ;;
+    *) throw cosh_copy_single: invalid obj_type;;
+  esac
+}
