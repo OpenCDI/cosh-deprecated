@@ -1,4 +1,5 @@
 #!/bin/sh
+# stop (and with --rm flag, remove) the temporary container
 remove_temporary_container(){
   silent getvar cosh_container || throw unknown container name
   ${SUDOING:+sudo} docker stop `getvar cosh_container`

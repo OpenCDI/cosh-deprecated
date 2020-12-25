@@ -1,3 +1,7 @@
+#!/bin/sh
+# set cosh script for the execution
+# shebang (#!/path/to/cosh -f) also supported
+
 set_file(){
   sanitize "$*";
   test -f "$1" || return 1

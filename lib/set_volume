@@ -1,4 +1,6 @@
 #!/bin/sh
+# set volume for the execution
+
 set_volume(){
   vol_args="$vol_args --mount type=volume,source=${2:?@cosh/set_volume: volume not specified!},destination=$(getvar cosh_home)/$2"
   setvar volume "$vol_args"

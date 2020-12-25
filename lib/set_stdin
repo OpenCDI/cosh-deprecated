@@ -1,3 +1,6 @@
+#!/bin/sh
+# set standard input listener for the container
+
 set_stdin(){
   test -t 0 && return 1
   parseargs(){
@@ -12,7 +15,7 @@ set_stdin(){
         $(getvar subcom) \
         -u $(getvar cosh_user) \
         -i $(get_target_container) \
-        $(getvar cosh_app_image) \
+        $(getvar cosh_app_image 2> /dev/null) \
         $(getvar cmd)
   }
   shiftstack 0 $@

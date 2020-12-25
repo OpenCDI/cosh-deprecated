@@ -1,4 +1,6 @@
 #!/bin/sh
+# copy file(s) to|from container
+
 cosh_copy(){
 
   require @cosh/copy

@@ -1,3 +1,5 @@
+#!/bin/sh
+# set shell for the execution inside the container
 execute_in_container_shell(){
   ${SUDOING:+sudo} docker exec \
     -u $(getvar cosh_user) \

@@ -1,4 +1,6 @@
 #!/bin/sh
+# get target container name for the command execution
+
 get_target_container(){
-  list_container | grep -E "$(getvar cosh_container)" | head -1 
+  list_container | grep -E "$(getvar cosh_container)" | head -1
 }

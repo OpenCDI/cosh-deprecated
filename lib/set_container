@@ -1,4 +1,6 @@
 #!/bin/sh
+# set container for the execution
+
 chk_set_container(){
   test -z "${1}" && throw "at least one argument needed for -c option, abort!";
 }

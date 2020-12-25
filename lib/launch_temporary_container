@@ -1,4 +1,6 @@
 #!/bin/sh
+# launch temporary container
+
 launch_temporary_container(){
   parseopts(){
     case $1 in
@@ -16,7 +18,7 @@ launch_temporary_container(){
     setvar cmd "${*:-/bin/sh}";
     test $# -ge 1 && shift $(expr $# - 1);
     setvar cosh_container ${this:-null}_${1:-shell}_$(genseed 8)
-    setvar cosh_app_image "${cosh_app_image:-$COSH_DEFAULT_APP_IMAGE}" 
+    setvar cosh_app_image "${cosh_app_image:-$COSH_DEFAULT_APP_IMAGE}"
     set_stdin $@ || return 0
   }
 
@@ -40,7 +42,7 @@ launch_temporary_container(){
       -v /tmp/.X11-unix:/tmp/.X11-unix \
       $(getvar cosh_app_image) \
       $(getvar cmd)
-    unset vol_args; 
+    unset vol_args;
   }
 
   shiftstack 1 $@

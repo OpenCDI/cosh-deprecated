@@ -1,3 +1,6 @@
+#!/bin/sh
+# set network assigned to container
+
 chk_set_network(){
   : ${1:?at least one argument needed for -n option, abort!}
 }

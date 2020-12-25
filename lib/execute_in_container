@@ -1,6 +1,7 @@
 #!/bin/sh
-#!/bin/sh
-  execute_in_container(){
-    # execute DI container
-    throw execute_in_container: builtin execution stack not set
-  }
+# DI container for the error handling for execute()
+
+execute_in_container(){
+  # execute DI container
+  throw execute_in_container: builtin execution stack not set
+}

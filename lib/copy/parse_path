@@ -1,4 +1,7 @@
-cosh_copy_fnparse(){
+#!/bin/sh
+# detect path pattern to copy the file
+
+parse_path(){
   test $1 != ${1##*:} && obj_type=container_path || obj_type=path
   test $1 != ${1#/} && full_path=/
   swapper=${1##*:}

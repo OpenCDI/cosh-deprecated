@@ -1,5 +1,7 @@
 #!/bin/sh
-list_container(){ 
+# list containers
+
+list_container(){
   list_container_modifier(){ sed -r -e s/.\+\ //g; }
   case $1 in -a|--all) list_all=1; shift;; -l|--long) list_container_modifier(){ cat; }; shift;; esac
   ${SUDOING:+sudo -u ${CDI_DOCKER_ADMIN:-root}} docker ps ${list_all:+-a}  | list_container_modifier | grep -vE \^NAME | grep -E "$1" ;
