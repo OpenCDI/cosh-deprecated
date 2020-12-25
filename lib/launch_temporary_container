@@ -4,7 +4,7 @@
     -i|--img) #image_name
       : ${2:?-i\|--image option needs an argument!};
       app_name=${app_image:-`list_images | grep $2 | head -1`};
-      : ${app_name:=null}
+      test -z "${app_name}" && throw unknown container image with $2
       shift 2;
     esac
     setvar cosh_container ${this:-null}_`genseed 8`
@@ -12,7 +12,8 @@
       -dt \
       --rm \
       -u `getvar cosh_user` \
-      -e DISPLAY=$DISPLAY \
+      --network `getvar cosh_network` \
+      -e DISPLAY=:0 \
       -e LANGUAGE=$LANGUAGE \
       -e LANG=$LANG \
       -e LC_ALL=$LC_ALL \
@@ -23,7 +24,7 @@
       -v /dev/dri:/dev/dri \
       -v /dev/shm:/dev/shm \
       -v /tmp/.X11-unix:/tmp/.X11-unix \
-      ${app_image:-$default_app_image} \
+      ${app_name:-$COSH_DEFAULT_APP_IMAGE} \
       $@
     unset vol_args; 
     exit

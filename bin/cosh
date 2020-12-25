@@ -55,7 +55,7 @@ cosh(){
     case $1 in
     list) 
     ##list container
-      list_container; exit ;;
+      list_container $2; exit ;;
     images) 
     ##list container images
       list_images; exit ;;

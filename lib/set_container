@@ -1,7 +1,7 @@
 #!/bin/sh
 
 chk_set_container(){ 
-  test -z "${1}" && throw "at least one argument needed for -c opts, abort!"; 
+  test -z "${1}" && throw "at least one argument needed for -c option, abort!"; 
 }
 set_container(){
   chk_set_container $1

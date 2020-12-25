@@ -1,0 +1,7 @@
+chk_set_network(){
+  : ${1:?at least one argument needed for -n option, abort!}
+}
+set_network(){
+  chk_set_network $1
+  setvar cosh_network $1
+}
