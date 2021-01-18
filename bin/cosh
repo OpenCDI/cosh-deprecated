@@ -65,6 +65,9 @@ cosh(){
     copy) #[pod:]<path>
     ##copy a file from/to container
       cosh_copy $@ ;;
+    info) #<pod>
+    ##show detailed information about the pod
+      cosh_info $@;;
     help) #[--all]
     ##show this help
       showhelp ${2:---short}; exit ;;

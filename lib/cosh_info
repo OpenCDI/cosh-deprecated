@@ -1,0 +1,8 @@
+cosh_info(){
+  parseopts(){ :; }
+  parseargs(){ setvar target_con ${1:?cosh_info: argument needed!}; }
+  execute(){
+    docker inspect $(getvar target_con)
+  }
+  shiftstack 1 $@
+}

@@ -3,6 +3,22 @@
 
 list_container(){
   list_container_modifier(){ sed -r -e s/.\+\ //g; }
-  case $1 in -a|--all) list_all=1; shift;; -l|--long) list_container_modifier(){ cat; }; shift;; esac
-  ${SUDOING:+sudo -u ${CDI_DOCKER_ADMIN:-root}} docker ps ${list_all:+-a}  | list_container_modifier | grep -vE \^NAME | grep -E "$1" ;
+  case $1 in 
+    -a|--all)
+      list_all=1;
+      shift;;
+    -l|--long)
+      list_container_modifier(){ cat; };
+      shift;;
+    -la|-al)
+      list_all=1;
+      list_container_modifier(){ cat; };
+      shift;;
+    -*) throw list_container: unknown option $1;;
+  esac
+  ${SUDOING:+sudo -u ${CDI_DOCKER_ADMIN:-root}} \
+    docker ps ${list_all:+-a}  \
+      | list_container_modifier \
+      | grep -vE \^NAME \
+      | grep -E "$1" ;
 }

@@ -3,7 +3,7 @@
 execute_in_container_shell(){
   ${SUDOING:+sudo} docker exec \
     -u $(getvar cosh_user) \
-    -it `get_target_container` \
+    -it $(get_target_container) \
     /bin/sh
 }
 
